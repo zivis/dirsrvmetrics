@@ -4,7 +4,9 @@ import (
 	"crypto/tls"
 	"flag"
 	"log"
+	"net"
 	"net/url"
+	"strconv"
 
 	"gopkg.in/ldap.v3"
 )
@@ -20,8 +22,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	port, err := net.LookupPort("tcp",u.Scheme)
+	if err != nil {
+		port = 389
+	}
 
-	l, err := ldap.Dial("tcp", u.Host)
+	l, err := ldap.Dial("tcp", u.Hostname()+":"+strconv.Itoa(port))
 	if err != nil {
 		log.Fatal(err)
 	}
