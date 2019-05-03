@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"flag"
+	"fmt"
 	"log"
 	"net"
 	"net/url"
@@ -14,6 +15,7 @@ import (
 var host = flag.String("host", "ldap://localhost:389", "Server URL")
 var user = flag.String("user", "scott", "Bind User")
 var password = flag.String("password", "", "User Password")
+var base = flag.String("base", "cn=Monitor", "Base for metrics")
 
 func main() {
 	flag.Parse()
@@ -42,10 +44,34 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	searchRequest := ldap.NewSearchRequest(
+		*base,
+		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
+		"(objectClass=top)",
+		[]string{},
+		nil,
+	)
 
-  // parse cn=monitor
-  // parse cn=snmp,cn=monitor
-  // parse cn=counters,cn=monitor
-  // parse cn=monitor connection metrics
+	sr, err := l.Search(searchRequest)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	values := make(map[string]int)
+
+	for _, e := range sr.Entries  {
+		fmt.Println(e.DN)
+		for _, a := range e.Attributes {
+			if n, e := strconv.Atoi(a.Values[0]); e == nil {
+				values[a.Name] = n
+			}
+		}
+	}
+
+	for v, n := range values {
+		fmt.Println("  "+v+strconv.Itoa(n))
+	}
+
+  // TODO: parse cn=monitor connection metrics
   // publish to telegraf
 }
