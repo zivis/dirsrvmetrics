@@ -7,7 +7,10 @@ import (
 	"log"
 	"net"
 	"net/url"
+	"os"
 	"strconv"
+	"strings"
+	"time"
 
 	"gopkg.in/ldap.v3"
 )
@@ -60,7 +63,6 @@ func main() {
 	values := make(map[string]int)
 
 	for _, e := range sr.Entries  {
-		fmt.Println(e.DN)
 		for _, a := range e.Attributes {
 			if n, e := strconv.Atoi(a.Values[0]); e == nil {
 				values[a.Name] = n
@@ -68,10 +70,23 @@ func main() {
 		}
 	}
 
-	for v, n := range values {
-		fmt.Println("  "+v+strconv.Itoa(n))
+	hostname, err := os.Hostname()
+
+
+	tags := []string{
+		"dirsrv",
+		"server="+u.Hostname(),
+		"port="+strconv.Itoa(port),
+		"host="+hostname,
 	}
 
+	fmt.Print(strings.Join(tags, ",") + " metrics="+strconv.Itoa(len(values)))
+
+	for v, n := range values {
+		fmt.Print(","+v+"="+strconv.Itoa(n)+"i")
+	}
+
+	fmt.Println(" "+strconv.FormatInt(time.Now().UnixNano(), 10))
+
   // TODO: parse cn=monitor connection metrics
-  // publish to telegraf
 }
