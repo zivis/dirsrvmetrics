@@ -2,6 +2,10 @@
 
 Project wich collects 389 Directory Server metrics.
 
+Building
+
+    $ go build .
+
 Usage:
 
     $ dirsrvmetrics -host ldap://localhost -user scott -password foo
