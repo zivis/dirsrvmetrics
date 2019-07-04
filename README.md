@@ -1,6 +1,6 @@
-# dirsrv metrics
+# `dirsrv` metrics
 
-Project wich collects 389 Directory Server metrics.
+Project wich collects [389 Directory Server] metrics.
 
 ### Building
 
@@ -11,7 +11,7 @@ Project wich collects 389 Directory Server metrics.
     $ dirsrvmetrics -host ldap://localhost -user scott -password foo
     dirsrv,server=localhost,port=389,host=localhost metrics=44,currentconnections=19i,... 1556894373217369460
 
-#### Useable as exec plugin for Telegraf
+#### Usable as exec plugin for Telegraf
 
     [[inputs.exec]]
       commands = [".../dirsrvmetrics -host ..."]
@@ -35,3 +35,4 @@ attempt to set up a TCP connection with TLS.
 If using self-signed certificates use the `-ca` command flag, or in dire
 situations the `-insecure` flag to skip host key verification.
 
+[389 Directory Server]: https://directory.fedoraproject.org/
