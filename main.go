@@ -33,18 +33,32 @@ func main() {
 		port = 389
 	}
 
-	l, err := ldap.Dial("tcp", u.Hostname()+":"+strconv.Itoa(port))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer l.Close()
-
-	err = l.StartTLS(&tls.Config{ServerName: u.Hostname()})
-	if err != nil {
-		log.Println("Could not connect via STARTTLS")
+	var conn *ldap.Conn
+	var tlsconfig = &tls.Config{
+		InsecureSkipVerify: false,
+		ServerName: u.Hostname(),
 	}
 
-	err = l.Bind(*user, *password)
+	if u.Scheme == "ldaps" {
+		conn, err := ldap.DialTLS("tcp", u.Hostname()+":"+strconv.Itoa(port), tlsconfig)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer conn.Close()
+	} else {
+		conn, err := ldap.Dial("tcp", u.Hostname()+":"+strconv.Itoa(port))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer conn.Close()
+
+		err = conn.StartTLS(tlsconfig)
+		if err != nil {
+			log.Println("Could not connect via STARTTLS")
+		}
+	}
+
+	err = conn.Bind(*user, *password)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +70,7 @@ func main() {
 		nil,
 	)
 
-	sr, err := l.Search(searchRequest)
+	sr, err := conn.Search(searchRequest)
 	if err != nil {
 		log.Fatal(err)
 	}
