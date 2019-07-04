@@ -27,7 +27,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	port, err := net.LookupPort("tcp",u.Scheme)
+	port, err := net.LookupPort("tcp", u.Scheme)
 	if err != nil {
 		port = 389
 	}
@@ -38,7 +38,7 @@ func main() {
 	}
 	defer l.Close()
 
-	err = l.StartTLS(&tls.Config{ServerName:u.Hostname()})
+	err = l.StartTLS(&tls.Config{ServerName: u.Hostname()})
 	if err != nil {
 		log.Println("Could not connect via STARTTLS")
 	}
@@ -62,7 +62,7 @@ func main() {
 
 	values := make(map[string]int)
 
-	for _, e := range sr.Entries  {
+	for _, e := range sr.Entries {
 		for _, a := range e.Attributes {
 			if n, e := strconv.Atoi(a.Values[0]); e == nil {
 				values[a.Name] = n
@@ -72,21 +72,20 @@ func main() {
 
 	hostname, err := os.Hostname()
 
-
 	tags := []string{
 		"dirsrv",
-		"server="+u.Hostname(),
-		"port="+strconv.Itoa(port),
-		"host="+hostname,
+		"server=" + u.Hostname(),
+		"port=" + strconv.Itoa(port),
+		"host=" + hostname,
 	}
 
-	fmt.Print(strings.Join(tags, ",") + " metrics="+strconv.Itoa(len(values)))
+	fmt.Print(strings.Join(tags, ",") + " metrics=" + strconv.Itoa(len(values)))
 
 	for v, n := range values {
-		fmt.Print(","+v+"="+strconv.Itoa(n)+"i")
+		fmt.Print("," + v + "=" + strconv.Itoa(n) + "i")
 	}
 
-	fmt.Println(" "+strconv.FormatInt(time.Now().UnixNano(), 10))
+	fmt.Println(" " + strconv.FormatInt(time.Now().UnixNano(), 10))
 
-  // TODO: parse cn=monitor connection metrics
+	// TODO: parse cn=monitor connection metrics
 }
