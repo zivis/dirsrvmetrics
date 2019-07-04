@@ -18,6 +18,7 @@ import (
 var host = flag.String("host", "ldap://localhost:389", "Server URL")
 var user = flag.String("user", "scott", "Bind User")
 var password = flag.String("password", "", "User Password")
+var insecure = flag.Bool("insecure", false, "Skip verify for TLS")
 
 func main() {
 	flag.Parse()
@@ -35,7 +36,7 @@ func main() {
 
 	var conn *ldap.Conn
 	var tlsconfig = &tls.Config{
-		InsecureSkipVerify: false,
+		InsecureSkipVerify: *insecure,
 		ServerName: u.Hostname(),
 	}
 
