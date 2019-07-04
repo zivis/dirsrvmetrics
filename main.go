@@ -19,6 +19,7 @@ var host = flag.String("host", "ldap://localhost:389", "Server URL")
 var user = flag.String("user", "scott", "Bind User")
 var password = flag.String("password", "", "User Password")
 var base = flag.String("base", "cn=Monitor", "Base for metrics")
+var tlsskipverify = flag.Bool("tlsskipverify", false, "skip verify at STARTTLS connect")
 
 func main() {
 	flag.Parse()
@@ -38,7 +39,18 @@ func main() {
 	}
 	defer l.Close()
 
-	err = l.StartTLS(&tls.Config{ServerName:u.Hostname()})
+	tlsconfig := &tls.Config{
+		ServerName:u.Hostname(),
+	}
+
+	if *tlsskipverify {
+		tlsconfig = &tls.Config{
+			ServerName:u.Hostname(),
+			InsecureSkipVerify: true,
+		}
+	}
+
+	err = l.StartTLS(tlsconfig)
 	if err != nil {
 		log.Println("Could not connect via STARTTLS")
 	}
