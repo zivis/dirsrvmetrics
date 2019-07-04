@@ -41,13 +41,13 @@ func main() {
 	}
 
 	if u.Scheme == "ldaps" {
-		conn, err := ldap.DialTLS("tcp", u.Hostname()+":"+strconv.Itoa(port), tlsconfig)
+		conn, err = ldap.DialTLS("tcp", u.Hostname()+":"+strconv.Itoa(port), tlsconfig)
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer conn.Close()
 	} else {
-		conn, err := ldap.Dial("tcp", u.Hostname()+":"+strconv.Itoa(port))
+		conn, err = ldap.Dial("tcp", u.Hostname()+":"+strconv.Itoa(port))
 		if err != nil {
 			log.Fatal(err)
 		}
