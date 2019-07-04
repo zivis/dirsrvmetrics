@@ -22,6 +22,7 @@ var base = flag.String("base", "cn=Monitor", "Base for metrics")
 
 func main() {
 	flag.Parse()
+	os.Args = []string{os.Args[0]}
 
 	loadDefaultConfig()
 
