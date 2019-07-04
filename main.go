@@ -11,17 +11,51 @@ import (
 	"strconv"
 	"strings"
 	"time"
+  "encoding/json"
 
 	"gopkg.in/ldap.v3"
 )
 
+var conffile = flag.String("config","","path to config-file(json)")
 var host = flag.String("host", "ldap://localhost:389", "Server URL")
 var user = flag.String("user", "scott", "Bind User")
 var password = flag.String("password", "", "User Password")
 var base = flag.String("base", "cn=Monitor", "Base for metrics")
 
+type Config struct {
+  Host     string `json:"host"`
+  User     string `json:"user"`
+  Password string `json:"password"`
+  Base     string `json:"base"`
+}
+
+func LoadConfiguration(file string) Config {
+    var config Config
+    configFile, err := os.Open(file)
+    defer configFile.Close()
+    if err != nil {
+        fmt.Println(err.Error())
+    }
+    jsonParser := json.NewDecoder(configFile)
+    jsonParser.Decode(&config)
+    return config
+}
+
 func main() {
 	flag.Parse()
+
+  if *conffile != "" {
+    config := LoadConfiguration(*conffile)
+    if config.Host != "" {
+      host = &config.Host
+    }
+    if config.User != "" {
+      user = &config.User
+    }
+    if config.Password != "" {
+      password = &config.Password
+    }
+  }
 
 	u, err := url.Parse(*host)
 	if err != nil {

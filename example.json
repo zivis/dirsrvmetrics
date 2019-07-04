@@ -1,0 +1,6 @@
+{
+  "host": "ldap://localhost.localdomain:389",
+  "user": "cn=monitoring manager, cn=config",
+  "password": "1234"
+  "tlsskipverify": true
+}
