@@ -17,3 +17,7 @@ Useable as exec plugin for Telegraf
       commands = [".../dirsrvmetrics -host ..."]
       timeout = "5s"
       data_format = "influx"
+
+The software will read a standard `ldap.conf`/`.ldaprc` file with an additional
+allowed `BINDPW` key to store the password.
+That way you won't have to specify the password on the commandline.

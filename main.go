@@ -23,6 +23,8 @@ var base = flag.String("base", "cn=Monitor", "Base for metrics")
 func main() {
 	flag.Parse()
 
+	loadDefaultConfig()
+
 	u, err := url.Parse(*host)
 	if err != nil {
 		log.Fatal(err)
