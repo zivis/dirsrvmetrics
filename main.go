@@ -102,6 +102,4 @@ func main() {
 	}
 
 	fmt.Println(" " + strconv.FormatInt(time.Now().UnixNano(), 10))
-
-	// TODO: parse cn=monitor connection metrics
 }
