@@ -20,6 +20,8 @@ Project wich collects 389 Directory Server metrics.
 
 ### Configuration
 
+You can use the command flags to specify all needed information, or:
+
 The software will read a standard `ldap.conf`/`.ldaprc` file with an additional
 allowed `BINDPW` key to store the password.
 That way you won't have to specify the password on the commandline.
