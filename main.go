@@ -18,7 +18,6 @@ import (
 var host = flag.String("host", "ldap://localhost:389", "Server URL")
 var user = flag.String("user", "scott", "Bind User")
 var password = flag.String("password", "", "User Password")
-var base = flag.String("base", "cn=Monitor", "Base for metrics")
 
 func main() {
 	flag.Parse()
@@ -50,7 +49,7 @@ func main() {
 		log.Fatal(err)
 	}
 	searchRequest := ldap.NewSearchRequest(
-		*base,
+		"cn=Monitor",
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
 		"(objectClass=top)",
 		[]string{},

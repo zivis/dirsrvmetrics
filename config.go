@@ -58,8 +58,6 @@ func loadDefaultFile(file string) {
 
 func setConfig(name string, value string) {
 	switch strings.ToUpper(name) {
-	case "BASE":
-		*base = value
 	case "URI":
 		*host = value
 	case "BINDDN":
